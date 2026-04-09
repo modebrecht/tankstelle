@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Für Navid - Das Tankstellenprinzip</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Inter', 'sans-serif'], 
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #18181b; 
+            color: #d4d4d8;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass-nav {
+            background-color: rgba(24, 24, 27, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Scroll Reveal Animationen */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Huii und weg! Animation für das Quiz */
+        .animate-spin-out {
+            animation: spinOutHuii 0.8s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+            transform-origin: center center;
+        }
+        @keyframes spinOutHuii {
+            0% { transform: rotate(0deg) scale(1); opacity: 1; }
+            20% { transform: rotate(-10deg) scale(1.05); opacity: 1; } 
+            100% { transform: rotate(1080deg) scale(0); opacity: 0; } 
+        }
+
+        /* Juicy Radio Buttons */
+        .quiz-radio:checked + label {
+            background-color: rgba(99, 102, 241, 0.15); 
+            border-color: rgba(99, 102, 241, 0.5); 
+            transform: scale(1.02);
+        }
+        .quiz-radio + label {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .quiz-radio + label .radio-circle {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .quiz-radio:checked + label .radio-circle {
+            background-color: #818cf8; 
+            border-color: #818cf8;
+            transform: scale(1.15);
+            box-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+        }
+        
+        /* Soft Glow Background for Lock Screens */
+        .glow-bg {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, rgba(24,24,27,0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Sanfte, meditative Welle (Smooth Wave) */
+        .bg-smooth-wave {
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='40' viewBox='0 0 120 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 Q 30 5, 60 20 T 120 20' fill='none' stroke='%23818cf8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+        }
+        .animate-wave-dance {
+            animation: waveDance 5s linear infinite; 
+        }
+        @keyframes waveDance {
+            0% { background-position: 0px center; }
+            100% { background-position: 120px center; } 
+        }
+        .wave-mask {
+            /* Lässt NUR die Welle an den Seiten sanft ausblenden */
+            mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+        }
+
+        /* Schloss-Öffnen Animation */
+        @keyframes shackleOpen {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-30deg); }
+        }
+        .animate-shackle {
+            transform-origin: bottom left;
+            animation: shackleOpen 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 0.5s;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
+
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-3 md:py-5 flex justify-between items-center">
+            <a href="#" class="font-bold tracking-tight text-base md:text-xl text-indigo-400 shrink-0 mr-auto hover:text-indigo-300 transition-colors">Für Navid</a>
+            
+            <ul class="flex text-[11px] sm:text-xs md:text-sm font-medium text-zinc-400 items-center">
+                <li class="pr-2 sm:pr-4 md:pr-8 lg:pr-12 xl:pr-16"><a href="#teil-1" class="hover:text-white transition-colors py-2 block">Teil 1</a></li>
+                <li class="px-2 sm:px-4 md:px-8 lg:px-12 xl:px-16 border-l border-zinc-700/60"><a href="#teil-2" class="hover:text-white transition-colors py-2 block">Teil 2</a></li>
+                <li class="px-2 sm:px-4 md:px-8 lg:px-12 xl:px-16 border-l border-zinc-700/60"><a href="#teil-3" class="hover:text-white transition-colors py-2 block">Teil 3</a></li>
+                <li class="pl-2 sm:pl-4 md:pl-8 lg:pl-12 xl:pl-16 border-l border-zinc-700/60"><a href="#teil-4" class="hover:text-white transition-colors py-2 block">Teil 4</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="pt-32 md:pt-44 pb-16 md:pb-24 px-6 text-center bg-gradient-to-b from-indigo-900/30 to-transparent relative">
+        <div class="max-w-3xl mx-auto reveal active">
+            <span class="text-indigo-400 font-semibold tracking-wider uppercase text-xs md:text-sm mb-4 block">Eine Reise zur emotionalen Eigenständigkeit</span>
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight mb-6 drop-shadow-lg">Das Tankstellenprinzip in Beziehungen</h1>
+            <p class="text-base md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed">
+                Warum wir oft mit Erwartungen an unsere Partner herantreten, wie Reibung entsteht und wie wir lernen, unsere eigene emotionale Quelle zu sein.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-0 md:px-6 pb-32 flex flex-col">
+
+        <!-- TEIL 1 -->
+        <article id="teil-1" class="scroll-mt-32 reveal">
+            <div class="group bg-[#222225] w-full rounded-none md:rounded-2xl shadow-xl md:border border-zinc-800 p-8 md:p-14 transition-all duration-500 md:hover:-translate-y-1 md:hover:shadow-[0_20px_40px_-15px_rgba(99,102,241,0.15)] md:hover:border-indigo-500/30">
+                <div class="prose prose-invert prose-base md:prose-lg lg:prose-xl max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-white prose-a:text-indigo-400 prose-strong:text-indigo-300">
+                    <h2 class="text-indigo-300 mb-8 border-b border-zinc-800 pb-4 group-hover:border-indigo-500/30 transition-colors duration-500">Teil 1: Wenn Erwartungen unerfüllt bleiben</h2>
+                    <p>Stell dir vor, deine emotionalen Bedürfnisse – nach Aufmerksamkeit, Bestätigung, Trost oder Unterstützung – sind wie der Tank eines Autos. In einer Beziehung hoffen wir natürlich, dass unser Partner eine Art "Stammtankstelle" für uns ist, bei der wir jederzeit vorfahren können, um diesen Tank aufzufüllen.</p>
+                    <p>Doch was passiert, wenn man immer wieder an diese Tankstelle fährt und merkt: Der Service entspricht nicht den Erwartungen, die Zapfsäulen sind leer oder die Station hat komplett geschlossen?</p>
+                    
+                    <h3>Der Kampf gegen die geschlossene Tür</h3>
+                    <p>Wenn wir mit Erwartungen an den Partner herantreten und diese nicht erfüllt werden, entsteht Frust. Wir rütteln an der Zapfsäule, beschweren uns beim Tankwart oder sind traurig, dass wir nicht den Treibstoff bekommen, den wir gerade dringend brauchen.</p>
+                    <p>Aber: Sich vor einer geschlossenen oder leeren Tankstelle aufzuregen, füllt den eigenen Tank nicht auf. Es verbrennt nur noch mehr von der eigenen Restenergie. Wenn der Partner aktuell nicht die Kapazität, das Verständnis oder die Ressourcen hat, um die Erwartungen zu erfüllen, dann ist das eine Realität, die man in diesem Moment akzeptieren muss.</p>
+
+                    <h3>Die Unabhängigkeit: Die eigene Tankstelle eröffnen</h3>
+                    <p>Genau hier greift das wichtigste Beziehungsprinzip: <strong>Wenn die äußere Tankstelle geschlossen ist oder nicht das liefert, was ich brauche, muss ich für mich selbst die Tankstelle sein.</strong></p>
+                    <p>Es ist gefährlich, das eigene emotionale Überleben komplett an das Angebot einer einzigen, externen Tankstelle zu knüpfen. Wahre emotionale Freiheit bedeutet, dass man einen eigenen, inneren Reservekanister besitzt. Wenn man merkt: <em>"Mein Partner kann mir das gerade nicht geben"</em>, darf man nicht in die Bedürftigkeit oder den Vorwurf abrutschen. Stattdessen übernimmt man selbst die Verantwortung für die eigenen Bedürfnisse.</p>
+
+                    <h3>Was bedeutet das konkret?</h3>
+                    <ul>
+                        <li><strong>Selbstregulation:</strong> Sich selbst beruhigen zu können, wenn man gestresst ist, statt zu verlangen, dass der andere den Stress wegmacht.</li>
+                        <li><strong>Selbstwert:</strong> Sich selbst zu bestätigen, statt darauf zu warten, dass der Partner einem das Gefühl gibt, wertvoll zu sein.</li>
+                        <li><strong>Realismus statt Illusion:</strong> Den Partner so zu sehen, wie er <em>ist</em>, und nicht so, wie er (laut den eigenen Erwartungen) <em>sein sollte</em>.</li>
+                    </ul>
+
+                    <div class="mt-10 p-6 bg-indigo-900/10 border border-indigo-900/30 rounded-xl group-hover:bg-indigo-900/20 group-hover:border-indigo-500/40 transition-all duration-500">
+                        <h4 class="text-indigo-300 mt-0">Fazit</h4>
+                        <p class="mb-0 text-base">Es ist ein Akt der Selbstfürsorge, sich von der ständigen Erwartungshaltung zu lösen. Wenn der Partner etwas geben kann: wunderbar. Das ist ein Bonus, über den man sich freuen kann. Aber wenn er es nicht kann, ist es kein Weltuntergang – denn du weißt, wie du deine eigene innere Tankstelle betreibst.</p>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 200px Übergang ohne Gradient-Schatten -->
+        <div class="w-full h-[200px] flex justify-center items-center relative overflow-hidden">
+            <div class="w-full h-[40px] bg-smooth-wave animate-wave-dance opacity-40 wave-mask"></div>
+        </div>
+
+        <!-- TEIL 2 -->
+        <article id="teil-2" class="scroll-mt-32 reveal">
+            <div id="content-2" class="hidden group bg-[#222225] w-full rounded-none md:rounded-2xl shadow-xl md:border border-zinc-800 p-8 md:p-14 transition-all duration-500 md:hover:-translate-y-1 md:hover:shadow-[0_20px_40px_-15px_rgba(99,102,241,0.15)] md:hover:border-indigo-500/30">
+                <div class="prose prose-invert prose-base md:prose-lg lg:prose-xl max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-white prose-strong:text-indigo-300">
+                    <h2 class="text-indigo-300 mb-8 border-b border-zinc-800 pb-4 group-hover:border-indigo-500/30 transition-colors duration-500">Teil 2: Pareto, die eigene Tankstelle und das Tüpfelchen auf dem i</h2>
+                    <p>Wir neigen oft dazu, unser Wohlbefinden von unserem Beziehungspartner abhängig zu machen. Wir erwarten, dass er unsere leeren Tanks füllt und uns glücklich macht. Doch diese Erwartung führt zwangsläufig zu Frust und Reibung, sobald der Partner einmal nicht verfügbar ist oder unsere Erwartungen nicht erfüllen kann.</p>
+                    <p>Ein radikaler, aber unglaublich befreiender Ansatz kombiniert das Tankstellenprinzip mit dem Pareto-Prinzip (der 80/20-Regel).</p>
+
+                    <h3>Das Pareto-Prinzip der inneren Fülle (80/20)</h3>
+                    <p>In einer gesunden, erwachsenen Lebensführung liegt die Verantwortung für das eigene Wohlbefinden <strong>zu 70 bis 80 % bei uns selbst</strong>.</p>
+                    <p>Das bedeutet: Ich entscheide zu 80 %, wie ich meine Lebens-Beziehung führe. Ich muss in erster Linie mit mir selbst eine hervorragende Beziehung führen. Das Fundament meines Glücks, meiner Stabilität und meiner Zufriedenheit baue ich selbst auf.</p>
+                    <p>Die Liebesbeziehung zu einem Partner macht dann "nur" noch die restlichen 20 bis 30 % aus. Sie ist nicht das Fundament, sie ist nicht der Motor, der mich am Leben hält – <strong>sie ist das Tüpfelchen auf dem i</strong>. Sie ist der Bonus, das Sahnehäubchen, ein wunderbares Geschenk on top. Aber ich verhungere nicht, wenn dieses Sahnehäubchen einmal fehlt.</p>
+
+                    <h3>Der Hauptberuf: Die eigene Tankstelle betreiben</h3>
+                    <p>Damit dieses 80/20-Prinzip funktioniert, muss ich mich darum kümmern, dass meine eigene innere Tankstelle reibungslos läuft. Ich bin mein eigener Tankwart. Selbstfürsorge ist keine leere Floskel, sondern harte, liebevolle Arbeit:</p>
+                    <ul>
+                        <li><strong>"Ich habe mich gerne."</strong></li>
+                        <li><strong>"Ich bin für mich da."</strong></li>
+                        <li>Sich selbst in den Arm nehmen können, sich selbst Milde und Wohlwollen schenken, besonders wenn es mal schwierig ist.</li>
+                    </ul>
+                    <p>Wenn ich lerne, mich selbst zu regulieren, löst sich die Abhängigkeit im Nichts auf. Ich kann gut überleben und stehen, ganz aus mir heraus.</p>
+
+                    <h3>Gelassenheit vor geschlossenen Zapfsäulen</h3>
+                    <p>Wer dieses Prinzip lebt, geht völlig anders in eine Beziehung. Wenn die Tankstelle des Partners mal geschlossen ist, bricht keine Welt mehr zusammen. Es gibt keinen Grund mehr, wütend gegen die Zapfsäule zu treten. Warum? Weil mir bewusst ist: <em>"Mir geht es gut, egal wie viele äußere Tankstellen für mich gerade verfügbar sind. Meine eigene produziert genug Treibstoff."</em></p>
+
+                    <div class="mt-10 p-6 bg-indigo-900/10 border border-indigo-900/30 rounded-xl group-hover:bg-indigo-900/20 group-hover:border-indigo-500/40 transition-all duration-500">
+                        <h4 class="text-indigo-300 mt-0">Fazit: Freiheit in der Verbindung</h4>
+                        <p class="mb-4 text-base">Solange ich erwarte, dass der andere 80 % meiner Bedürfnisse stillt, bin ich emotional abhängig und setze den anderen unter enormen Druck.</p>
+                        <p class="mb-0 text-base">Wenn ich aber die 80 % selbst übernehme, befreie ich die Beziehung. Ich kann den Partner so nehmen, wie er ist. Wenn er etwas geben kann: Herrlich, ich genieße die 20 % Bonus. Wenn nicht: Auch in Ordnung. Ich habe ja mich.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lock Screen -->
+            <div id="lock-2" class="flex flex-col items-center justify-center py-24 md:py-32 px-6 text-center relative rounded-2xl overflow-hidden">
+                <div class="glow-bg"></div>
+                <div class="bg-indigo-900/30 p-4 rounded-full shadow-lg mb-6 border border-indigo-500/20 animate-float relative z-10">
+                    <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold tracking-tight text-white mb-3 mt-0 relative z-10">Teil 2: Pareto & das Tüpfelchen auf dem i</h3>
+                <p class="text-zinc-400 m-0 relative z-10">Dieses Kapitel ist noch verschlossen.</p>
+                
+                <div class="mt-8 flex flex-col sm:flex-row items-center gap-4 relative z-10">
+                    <div class="bg-indigo-500/10 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase cursor-default">
+                        Freischaltung am 10. April
+                    </div>
+                    <button onclick="openQuiz(2)" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase transition-all duration-200 active:scale-95 cursor-pointer shadow-sm">
+                        Let me cheat!
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="quiz-2" class="hidden bg-[#222225] w-full rounded-none md:rounded-2xl shadow-[0_0_50px_-12px_rgba(99,102,241,0.2)] md:border border-indigo-500/30 p-8 md:p-14">
+                <h3 class="text-2xl font-bold text-white mb-2">Cheat-Quiz für Teil 2</h3>
+                <p class="text-zinc-400 mb-8 pb-4 border-b border-zinc-800">Beantworte drei Fragen zu Teil 1, um diesen Text jetzt schon zu lesen.</p>
+                <div id="quiz-container-2" class="space-y-8"></div>
+                <div id="quiz-error-2" class="hidden mt-6 p-4 rounded-lg text-sm transition-all duration-300"></div>
+                <div class="mt-10 flex gap-4">
+                    <button onclick="checkQuiz(2)" class="bg-indigo-600 hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] active:scale-95 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200">
+                        Antworten prüfen
+                    </button>
+                    <button onclick="cancelQuiz(2)" class="text-zinc-400 hover:text-white px-4 transition-colors active:scale-95">Abbrechen</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- 200px Übergang ohne Gradient-Schatten -->
+        <div class="w-full h-[200px] flex justify-center items-center relative overflow-hidden">
+            <div class="w-full h-[40px] bg-smooth-wave animate-wave-dance opacity-40 wave-mask"></div>
+        </div>
+
+        <!-- TEIL 3 -->
+        <article id="teil-3" class="scroll-mt-32 reveal">
+            <div id="content-3" class="hidden group bg-[#222225] w-full rounded-none md:rounded-2xl shadow-xl md:border border-zinc-800 p-8 md:p-14 transition-all duration-500 md:hover:-translate-y-1 md:hover:shadow-[0_20px_40px_-15px_rgba(99,102,241,0.15)] md:hover:border-indigo-500/30">
+                <div class="prose prose-invert prose-base md:prose-lg lg:prose-xl max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-white prose-strong:text-indigo-300">
+                    <h2 class="text-indigo-300 mb-8 border-b border-zinc-800 pb-4 group-hover:border-indigo-500/30 transition-colors duration-500">Teil 3: Die buddhistische Sicht – Erwartungen und Reibung</h2>
+                    <p>Wenn wir das Tankstellenprinzip und das Pareto-Prinzip durch eine buddhistische Linse betrachten, wird sehr schnell klar, warum wir in Beziehungen oft so stark leiden – und wie wir uns daraus befreien können.</p>
+
+                    <h3>Wie Reibung (Dukkha) in der Beziehung entsteht</h3>
+                    <p>Im Buddhismus entsteht <em>Dukkha</em> (Leiden, Stress, Reibung) immer dann, wenn unser Geist im Widerstand zur aktuellen Realität steht. In einer Beziehung passiert das permanent durch <strong>Erwartungen</strong>. Eine Erwartung ist der feste Glaube daran, wie der Partner in einem bestimmten Moment sein <em>sollte</em>.</p>
+                    <p><strong>Die Formel für Beziehungs-Dukkha lautet:</strong><br>
+                    <code class="text-indigo-300 bg-indigo-950 px-2 py-1 rounded border border-indigo-900/50">Realität + Widerstand = Dukkha (Frust)</code></p>
+                    <p>Wir leiden nicht primär daran, dass der Partner keine Zeit hat. Wir leiden an unserem verzweifelten Festhalten (<em>Anhaftung / Upadana</em>) an der Vorstellung, er <em>müsste</em> Zeit haben.</p>
+
+                    <h3>Wie emotionale Abhängigkeit entsteht</h3>
+                    <p>Abhängigkeit entsteht, wenn wir die Verantwortung für unser eigenes Glück auslagern (die 80 % nicht übernehmen). Wir machen unser Wohlbefinden von einer äußeren Bedingung abhängig: <em>"Ich kann nur glücklich/ruhig/sicher sein, wenn mein Partner mir das gibt."</em></p>
+                    <p>Das ist buddhistisch gesehen ein gefährlicher Weg, denn alles Äußere ist vergänglich und ständigen Schwankungen unterworfen (<em>Anicca</em>). Eine externe Tankstelle wird unweigerlich mal schließen, mal den falschen Treibstoff haben oder ausfallen. Wer sein Überleben daran knüpft, lebt in ständiger Angst vor dem Mangel. Der Partner wird vom Mitmenschen zum reinen "Bedürfnis-Erfüller" degradiert, was enormen Druck auf ihn ausübt.</p>
+
+                    <h3>Warum Erwartungen oft Gift sind</h3>
+                    <p>Erwartungen vergiften die Beziehung, weil sie uns blind für den Moment und den anderen Menschen machen.</p>
+                    <ul>
+                        <li><strong>Wir sehen den anderen nicht mehr:</strong> Wir sehen nur noch unsere Checkliste, die er abhaken soll.</li>
+                        <li><strong>Wir zerstören das Geschenk:</strong> Wenn der Partner etwas aus Liebe gibt (die 20 % Bonus), können wir es nicht wertschätzen, weil wir es ja ohnehin <em>erwartet</em> haben. Es wird zur Pflichterfüllung.</li>
+                        <li><strong>Wir verlieren unsere Mitte:</strong> Wenn die Erwartung nicht erfüllt wird, kippen wir sofort aus dem Gleichgewicht.</li>
+                    </ul>
+
+                    <h3>Der buddhistische Lösungsweg</h3>
+                    <p>Wie weicht man diese Abhängigkeit auf? Durch den Aufbau der eigenen, inneren Tankstelle mithilfe buddhistischer Praxis.</p>
+                    <ul>
+                        <li><strong>Die Lücke erkennen:</strong> Wenn eine Erwartung nicht erfüllt wird, reagiere nicht sofort. Lass eine Lücke entstehen. Bemerkte einfach: <em>"Ah, da ist Dukkha."</em></li>
+                        <li><strong>Anapanasati (Atem):</strong> Nutze den Atem, um das aufgewühlte System zu beruhigen. Du holst die Energie vom Partner (im Außen) zurück zu dir (ins Innen).</li>
+                        <li><strong>Upekkha (Gleichmut):</strong> Übe dich darin, die Realität zu akzeptieren. Die Tankstelle des Partners ist geschlossen. Das ist ein Fakt. Es ist weder gut noch böse.</li>
+                        <li><strong>Metta (Wohlwollen):</strong> Hier geschieht die Übernahme der 80 %. Gib dir selbst, was der Partner dir gerade nicht geben kann. Schick dir selbst <em>Metta</em>.</li>
+                    </ul>
+
+                    <div class="mt-10 p-6 bg-indigo-900/10 border border-indigo-900/30 rounded-xl group-hover:bg-indigo-900/20 group-hover:border-indigo-500/40 transition-all duration-500">
+                        <h4 class="text-indigo-300 mt-0">Fazit</h4>
+                        <p class="mb-0 text-base">Die buddhistische Praxis in der Beziehung bedeutet, die volle Verantwortung für das eigene emotionale Konto zu übernehmen. Wenn die eigene Tankstelle durch Selbstfürsorge, Achtsamkeit und Metta stets gefüllt ist, wird die Beziehung vom Überlebenskampf zu einem freien, unbeschwerten Tanz. Der Partner muss nicht mehr liefern – er darf einfach da sein. Das ist das "Tüpfelchen auf dem i".</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lock-3" class="flex flex-col items-center justify-center py-24 md:py-32 px-6 text-center relative rounded-2xl overflow-hidden">
+                <div class="glow-bg"></div>
+                <div class="bg-indigo-900/30 p-4 rounded-full shadow-lg mb-6 border border-indigo-500/20 animate-float relative z-10">
+                    <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold tracking-tight text-white mb-3 mt-0 relative z-10">Teil 3: Die buddhistische Sicht</h3>
+                <p class="text-zinc-400 m-0 relative z-10">Dieses Kapitel ist noch verschlossen.</p>
+                
+                <div class="mt-8 flex flex-col sm:flex-row items-center gap-4 relative z-10">
+                    <div class="bg-indigo-500/10 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase cursor-default">
+                        Freischaltung am 11. April
+                    </div>
+                    <button onclick="openQuiz(3)" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase transition-all duration-200 active:scale-95 cursor-pointer shadow-sm">
+                        Let me cheat!
+                    </button>
+                </div>
+            </div>
+
+            <div id="quiz-3" class="hidden bg-[#222225] w-full rounded-none md:rounded-2xl shadow-[0_0_50px_-12px_rgba(99,102,241,0.2)] md:border border-indigo-500/30 p-8 md:p-14">
+                <h3 class="text-2xl font-bold text-white mb-2">Cheat-Quiz für Teil 3</h3>
+                <p class="text-zinc-400 mb-8 pb-4 border-b border-zinc-800">Beantworte drei Fragen zu Teil 2, um diesen Text jetzt schon zu lesen.</p>
+                <div id="quiz-container-3" class="space-y-8"></div>
+                <div id="quiz-error-3" class="hidden mt-6 p-4 rounded-lg text-sm transition-all duration-300"></div>
+                <div class="mt-10 flex gap-4">
+                    <button onclick="checkQuiz(3)" class="bg-indigo-600 hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] active:scale-95 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200">
+                        Antworten prüfen
+                    </button>
+                    <button onclick="cancelQuiz(3)" class="text-zinc-400 hover:text-white px-4 transition-colors active:scale-95">Abbrechen</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- 200px Übergang ohne Gradient-Schatten -->
+        <div class="w-full h-[200px] flex justify-center items-center relative overflow-hidden">
+            <div class="w-full h-[40px] bg-smooth-wave animate-wave-dance opacity-40 wave-mask"></div>
+        </div>
+
+        <!-- TEIL 4 -->
+        <article id="teil-4" class="scroll-mt-32 reveal">
+            <div id="content-4" class="hidden group bg-[#222225] w-full rounded-none md:rounded-2xl shadow-xl md:border border-zinc-800 p-8 md:p-14 transition-all duration-500 md:hover:-translate-y-1 md:hover:shadow-[0_20px_40px_-15px_rgba(99,102,241,0.15)] md:hover:border-indigo-500/30">
+                <div class="prose prose-invert prose-base md:prose-lg lg:prose-xl max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-white prose-strong:text-indigo-300">
+                    <h2 class="text-indigo-300 mb-8 border-b border-zinc-800 pb-4 group-hover:border-indigo-500/30 transition-colors duration-500">Teil 4: Ausblick und Stolpersteine im Alltag</h2>
+                    
+                    <h3>Der Sinn hinter all dem: Warum diese Prinzipien anwenden?</h3>
+                    <p>Der Sinn dieser Prinzipien ist <strong>Freiheit und tieferer Frieden</strong>. Solange wir unsere Zufriedenheit von der Lieferung anderer abhängig machen, sind wir Gefangene unserer eigenen Bedürfnisse. Wir leben in ständiger Alarmbereitschaft (Dukkha).</p>
+                    <p>Wenn wir diese Abhängigkeit aufweichen und Verantwortung übernehmen, passiert Magisches:</p>
+                    <ul>
+                        <li>Die Beziehung wird entspannter. Der Partner atmet auf, weil der Druck sinkt.</li>
+                        <li>Die eigene Stabilität steigt. Wir ruhen in uns selbst (<em>Upekkha</em>).</li>
+                        <li>Wir werden widerstandsfähiger gegenüber den Unwägbarkeiten des Lebens (<em>Anicca</em>).</li>
+                    </ul>
+
+                    <h3>Wie man trotz Erwartungen glücklich wird</h3>
+                    <p>Es ist unrealistisch zu glauben, wir könnten alle Erwartungen abstellen. Der Trick ist nicht, keine Erwartungen mehr zu haben, sondern <strong>wie wir reagieren, wenn sie nicht erfüllt werden</strong>.</p>
+                    <p>Glücklich wird man, wenn man die Nichterfüllung nicht als persönlichen Angriff wertet. Anstatt in Vorwürfe zu kippen, wechseln wir sofort zur inneren Tankstelle. Das ist wahres Glück: Die Gewissheit, dass man sich selbst niemals im Stich lässt.</p>
+
+                    <h3>Wie man Freude länger empfindet</h3>
+                    <p>Freude verfliegt oft schnell, weil wir sofort nach dem <em>Nächsten</em> greifen oder fürchten, dass die Freude bald wieder vorbei ist.</p>
+                    <p>Um Freude länger zu spüren, müssen wir sie <strong>im Moment verankern</strong>, ohne sie festzuhalten. Wenn der Partner uns diese wunderbaren 20 % Bonus schenkt (eine Umarmung, ein gutes Gespräch, einen Gefallen), dann lass eine <em>Lücke</em> entstehen. Atme tief ein (<em>Anapanasati</em>), nimm die Geste ganz bewusst wahr und empfinde Dankbarkeit dafür – ohne sofort die Erwartung anzuknüpfen, dass er das morgen wieder tun muss. Die Freude bleibt länger, wenn sie nicht durch künftige Forderungen erstickt wird.</p>
+
+                    <h3>Fallbacks: Bekannte Muster, die es zu vermeiden gilt</h3>
+                    <ul>
+                        <li><strong>Die passive Aggression:</strong> Schmollender Rückzug ("Dann brauche ich dich eben gar nicht mehr!"). <em>Korrektur:</em> Erkenne, dass dies nur eine Form von Vorwurf ist. Kehre zu echtem <em>Metta</em> für dich selbst zurück. Unabhängigkeit ist nicht kalt, sie ist weich.</li>
+                        <li><strong>Das Buchhalter-Syndrom:</strong> "Ich habe mich jetzt dreimal selbst reguliert, jetzt ist er dran!" <em>Korrektur:</em> Beziehungen sind kein Handel.</li>
+                        <li><strong>Die Panik bei leerem Tank:</strong> Der Frust steigt so schnell, dass man die Lücke verpasst. <em>Korrektur:</em> Nutze dein Streichholz-Wort (z.B. "Loslah"). Zwinge dich zu einem Atemzug.</li>
+                    </ul>
+                    
+                    <div class="mt-12 p-8 bg-indigo-950/20 border-t border-indigo-500/20 text-center rounded-b-2xl">
+                        <p class="text-indigo-200/90 italic text-base md:text-lg mb-0 font-light leading-relaxed">
+                            "Die Pflege deiner eigenen Tankstelle ist die wichtigste Arbeit deines Lebens. Wenn du gelernt hast, dich selbst zu nähren, dann ist die Liebe, die du geben und annehmen kannst, nicht mehr bedürftig – sie ist bedingungslos."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lock-4" class="flex flex-col items-center justify-center py-24 md:py-32 px-6 text-center relative rounded-2xl overflow-hidden">
+                <div class="glow-bg"></div>
+                <div class="bg-indigo-900/30 p-4 rounded-full shadow-lg mb-6 border border-indigo-500/20 animate-float relative z-10">
+                    <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold tracking-tight text-white mb-3 mt-0 relative z-10">Teil 4: Ausblick & Stolpersteine</h3>
+                <p class="text-zinc-400 m-0 relative z-10">Dieses Kapitel ist noch verschlossen.</p>
+                
+                <div class="mt-8 flex flex-col sm:flex-row items-center gap-4 relative z-10">
+                    <div class="bg-indigo-500/10 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase cursor-default">
+                        Freischaltung am 12. April
+                    </div>
+                    <button onclick="openQuiz(4)" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase transition-all duration-200 active:scale-95 cursor-pointer shadow-sm">
+                        Let me cheat!
+                    </button>
+                </div>
+            </div>
+
+            <div id="quiz-4" class="hidden bg-[#222225] w-full rounded-none md:rounded-2xl shadow-[0_0_50px_-12px_rgba(99,102,241,0.2)] md:border border-indigo-500/30 p-8 md:p-14">
+                <h3 class="text-2xl font-bold text-white mb-2">Cheat-Quiz für Teil 4</h3>
+                <p class="text-zinc-400 mb-8 pb-4 border-b border-zinc-800">Beantworte drei Fragen zu Teil 3, um diesen Text jetzt schon zu lesen.</p>
+                <div id="quiz-container-4" class="space-y-8"></div>
+                <div id="quiz-error-4" class="hidden mt-6 p-4 rounded-lg text-sm transition-all duration-300"></div>
+                <div class="mt-10 flex gap-4">
+                    <button onclick="checkQuiz(4)" class="bg-indigo-600 hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] active:scale-95 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200">
+                        Antworten prüfen
+                    </button>
+                    <button onclick="cancelQuiz(4)" class="text-zinc-400 hover:text-white px-4 transition-colors active:scale-95">Abbrechen</button>
+                </div>
+            </div>
+        </article>
+
+    </main>
+
+    <footer class="bg-black/40 border-t border-zinc-800/50 py-12 text-center text-zinc-500">
+        <p class="text-sm">Ein Leitfaden zur emotionalen Eigenständigkeit & Selbstfürsorge.</p>
+    </footer>
+
+    <script>
+        const quizzes = {
+            2: [
+                {
+                    q: "Was passiert laut Text, wenn man wütend gegen die geschlossene Zapfsäule rüttelt?",
+                    options: [
+                        "Der eigene Tank füllt sich langsam auf.",
+                        "Man verbrennt nur noch mehr von der eigenen Restenergie.",
+                        "Der Partner merkt, dass er die Tankstelle öffnen muss."
+                    ],
+                    correct: 1
+                },
+                {
+                    q: "Was bedeutet es konkret, die eigene Tankstelle zu eröffnen?",
+                    options: [
+                        "Selbstregulation und den eigenen Selbstwert von innen zu bestätigen.",
+                        "Sich sofort einen anderen Partner zu suchen.",
+                        "Dem Partner ein schlechtes Gewissen zu machen."
+                    ],
+                    correct: 0
+                },
+                {
+                    q: "Welches ist ein konkretes Beispiel für Selbstregulation aus dem Text?",
+                    options: [
+                        "Dem Partner die Schuld für den schlechten Tag geben.",
+                        "Sich selbst beruhigen zu können, wenn man gestresst ist.",
+                        "Laut werden und rütteln."
+                    ],
+                    correct: 1
+                }
+            ],
+            3: [
+                {
+                    q: "Nach dem 80/20-Prinzip: Zu wie viel Prozent liegt die Verantwortung für das eigene Wohlbefinden bei uns selbst?",
+                    options: ["20 bis 30 %", "50 %", "70 bis 80 %"],
+                    correct: 2
+                },
+                {
+                    q: "Wie wird die Liebesbeziehung in diesem Modell beschrieben?",
+                    options: [
+                        "Als das absolute Fundament des Glücks.",
+                        "Als das Tüpfelchen auf dem i (ein Bonus).",
+                        "Als der Motor, der uns am Leben hält."
+                    ],
+                    correct: 1
+                },
+                {
+                    q: "Was passiert laut Text, wenn man lernt, sich selbst zu regulieren?",
+                    options: [
+                        "Die Abhängigkeit löst sich im Nichts auf.",
+                        "Der Partner verlässt einen.",
+                        "Man braucht keine Freunde mehr."
+                    ],
+                    correct: 0
+                }
+            ],
+            4: [
+                {
+                    q: "Wie lautet die buddhistische Formel für Beziehungs-Dukkha laut Text?",
+                    options: [
+                        "Leerer Tank + Keine Zeit = Trennung",
+                        "Wut + Angst = Dukkha",
+                        "Realität + Widerstand = Dukkha (Frust)"
+                    ],
+                    correct: 2
+                },
+                {
+                    q: "Welches Werkzeug soll man nutzen, um das aufgewühlte System (die Panik vor dem leeren Tank) physisch zu beruhigen?",
+                    options: ["Anapanasati (Atem)", "Metta", "Sangha"],
+                    correct: 0
+                },
+                {
+                    q: "Was ist der erste Schritt, wenn eine Erwartung nicht erfüllt wird?",
+                    options: [
+                        "Sofort einen Vorwurf formulieren.",
+                        "Die Beziehung beenden.",
+                        "Eine Lücke entstehen lassen und das Dukkha erkennen."
+                    ],
+                    correct: 2
+                }
+            ]
+        };
+
+        const unlockDates = {
+            2: new Date('2026-04-10T00:00:00'),
+            3: new Date('2026-04-11T00:00:00'),
+            4: new Date('2026-04-12T00:00:00')
+        };
+
+        let progress = JSON.parse(localStorage.getItem('tankstelleProgress')) || { 2: false, 3: false, 4: false };
+
+        function setupIntersectionObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px" 
+            });
+
+            document.querySelectorAll('.reveal').forEach((el) => {
+                observer.observe(el);
+            });
+        }
+
+        function init() {
+            const now = new Date();
+            
+            [2, 3, 4].forEach(part => {
+                const isUnlocked = now >= unlockDates[part] || progress[part] === true;
+                
+                if (isUnlocked) {
+                    document.getElementById(`content-${part}`).classList.remove('hidden');
+                    document.getElementById(`lock-${part}`).classList.add('hidden');
+                    document.getElementById(`quiz-${part}`).classList.add('hidden');
+                } else {
+                    document.getElementById(`content-${part}`).classList.add('hidden');
+                    document.getElementById(`lock-${part}`).classList.remove('hidden');
+                    document.getElementById(`quiz-${part}`).classList.add('hidden');
+                    buildQuizUI(part);
+                }
+            });
+
+            setTimeout(setupIntersectionObserver, 100);
+        }
+
+        function openQuiz(part) {
+            document.getElementById(`lock-${part}`).classList.add('hidden');
+            const quizEl = document.getElementById(`quiz-${part}`);
+            quizEl.classList.remove('hidden');
+            setTimeout(() => { quizEl.classList.add('opacity-100'); }, 10);
+            
+            const errorEl = document.getElementById(`quiz-error-${part}`);
+            if (errorEl) {
+                errorEl.classList.add('hidden');
+            }
+        }
+
+        function cancelQuiz(part) {
+            document.getElementById(`quiz-${part}`).classList.add('hidden');
+            document.getElementById(`lock-${part}`).classList.remove('hidden');
+        }
+
+        function buildQuizUI(part) {
+            const container = document.getElementById(`quiz-container-${part}`);
+            container.innerHTML = ''; 
+
+            quizzes[part].forEach((q, qIndex) => {
+                let html = `<div class="mb-6"><p class="text-white font-medium mb-4">${qIndex + 1}. ${q.q}</p><div class="space-y-3">`;
+                
+                q.options.forEach((opt, oIndex) => {
+                    const id = `q-${part}-${qIndex}-${oIndex}`;
+                    const name = `quiz-${part}-q${qIndex}`;
+                    html += `
+                        <div class="relative">
+                            <input type="radio" id="${id}" name="${name}" value="${oIndex}" class="quiz-radio peer sr-only">
+                            <label for="${id}" class="flex items-center p-4 bg-zinc-800/40 border border-zinc-700/50 rounded-xl cursor-pointer hover:bg-zinc-800/80">
+                                <div class="radio-circle w-5 h-5 rounded-full border-2 border-zinc-500 mr-4 flex-shrink-0"></div>
+                                <span class="text-zinc-300 text-sm md:text-base leading-snug">${opt}</span>
+                            </label>
+                        </div>
+                    `;
+                });
+                
+                html += `</div></div>`;
+                container.innerHTML += html;
+            });
+        }
+
+        function checkQuiz(part) {
+            const quizData = quizzes[part];
+            let allCorrect = true;
+            let answeredAll = true;
+
+            quizData.forEach((q, qIndex) => {
+                const name = `quiz-${part}-q${qIndex}`;
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                
+                if (!selected) {
+                    answeredAll = false;
+                } else if (parseInt(selected.value) !== q.correct) {
+                    allCorrect = false;
+                }
+            });
+
+            const errorEl = document.getElementById(`quiz-error-${part}`);
+            if (!errorEl) return;
+            
+            if (!answeredAll) {
+                errorEl.classList.remove('hidden', 'bg-green-500/10', 'border-green-500/20', 'text-green-400', 'animate-pulse');
+                errorEl.classList.add('bg-red-500/10', 'border-red-500/20', 'text-red-400');
+                errorEl.textContent = "Bitte beantworte alle Fragen.";
+                return;
+            }
+
+            if (allCorrect) {
+                progress[part] = true;
+                localStorage.setItem('tankstelleProgress', JSON.stringify(progress));
+                
+                errorEl.classList.remove('hidden', 'bg-red-500/10', 'border-red-500/20', 'text-red-400');
+                errorEl.classList.add('bg-green-500/10', 'border-green-500/20', 'text-green-400', 'animate-pulse');
+                
+                errorEl.innerHTML = `
+                    <div class="flex items-center justify-center gap-3">
+                        <svg class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path class="animate-shackle" d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span class="font-medium text-base">Korrekt! Der neue Teil wird freigeschaltet.</span>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    const quizEl = document.getElementById(`quiz-${part}`);
+                    quizEl.classList.add('animate-spin-out');
+                    
+                    setTimeout(() => {
+                        init(); 
+                        quizEl.classList.remove('animate-spin-out'); 
+                        
+                        setTimeout(() => {
+                            document.getElementById(`teil-${part}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 100);
+
+                    }, 800); 
+                    
+                }, 6000); 
+            } else {
+                errorEl.classList.remove('hidden', 'bg-green-500/10', 'border-green-500/20', 'text-green-400', 'animate-pulse');
+                errorEl.classList.add('bg-red-500/10', 'border-red-500/20', 'text-red-400');
+                errorEl.textContent = "Das war leider nicht ganz richtig. Lies nochmal im vorherigen Teil nach!";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
