@@ -236,8 +236,8 @@
                 <p class="text-zinc-400 m-0 relative z-10">Dieses Kapitel ist noch verschlossen.</p>
                 
                 <div class="mt-8 flex flex-col sm:flex-row items-center gap-4 relative z-10">
-                    <div class="bg-indigo-500/10 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase cursor-default">
-                        Freischaltung am 10. April
+                    <div id="unlock-label-2" class="bg-indigo-500/10 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase cursor-default">
+                        Freischaltung folgt
                     </div>
                     <button onclick="openQuiz(2)" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase transition-all duration-200 active:scale-95 cursor-pointer shadow-sm">
                         Let me cheat!
@@ -314,8 +314,8 @@
                 <p class="text-zinc-400 m-0 relative z-10">Dieses Kapitel ist noch verschlossen.</p>
                 
                 <div class="mt-8 flex flex-col sm:flex-row items-center gap-4 relative z-10">
-                    <div class="bg-indigo-500/10 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase cursor-default">
-                        Freischaltung am 11. April
+                    <div id="unlock-label-3" class="bg-indigo-500/10 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase cursor-default">
+                        Freischaltung folgt
                     </div>
                     <button onclick="openQuiz(3)" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase transition-all duration-200 active:scale-95 cursor-pointer shadow-sm">
                         Let me cheat!
@@ -395,8 +395,8 @@
                 <p class="text-zinc-400 m-0 relative z-10">Dieses Kapitel ist noch verschlossen.</p>
                 
                 <div class="mt-8 flex flex-col sm:flex-row items-center gap-4 relative z-10">
-                    <div class="bg-indigo-500/10 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase cursor-default">
-                        Freischaltung am 12. April
+                    <div id="unlock-label-4" class="bg-indigo-500/10 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase cursor-default">
+                        Freischaltung folgt
                     </div>
                     <button onclick="openQuiz(4)" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 font-medium px-5 py-2.5 rounded-full text-xs md:text-sm border border-indigo-500/20 tracking-wider uppercase transition-all duration-200 active:scale-95 cursor-pointer shadow-sm">
                         Let me cheat!
@@ -422,6 +422,11 @@
 
     <footer class="bg-black/40 border-t border-zinc-800/50 py-12 text-center text-zinc-500">
         <p class="text-sm">Ein Leitfaden zur emotionalen Eigenständigkeit & Selbstfürsorge.</p>
+        <div class="mt-6">
+            <button onclick="resetProgress()" class="inline-flex items-center justify-center rounded-full border border-zinc-700/80 px-5 py-2.5 text-xs md:text-sm font-medium tracking-wider uppercase text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white">
+                Fortschritt löschen
+            </button>
+        </div>
     </footer>
 
     <script>
@@ -507,13 +512,54 @@
             ]
         };
 
-        const unlockDates = {
-            2: new Date('2026-04-10T00:00:00'),
-            3: new Date('2026-04-11T00:00:00'),
-            4: new Date('2026-04-12T00:00:00')
-        };
-
+        const scheduleStorageKey = 'tankstelleScheduleStart';
         let progress = JSON.parse(localStorage.getItem('tankstelleProgress')) || { 2: false, 3: false, 4: false };
+
+        function startOfDay(date) {
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        }
+
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
+        function getScheduleStart() {
+            const stored = localStorage.getItem(scheduleStorageKey);
+            if (stored) {
+                return new Date(stored);
+            }
+
+            const todayStart = startOfDay(new Date());
+            localStorage.setItem(scheduleStorageKey, todayStart.toISOString());
+            return todayStart;
+        }
+
+        function getUnlockDates() {
+            const scheduleStart = getScheduleStart();
+            return {
+                2: addDays(scheduleStart, 3),
+                3: addDays(scheduleStart, 6),
+                4: addDays(scheduleStart, 9)
+            };
+        }
+
+        function formatUnlockDate(date) {
+            return date.toLocaleDateString('de-DE', {
+                day: 'numeric',
+                month: 'long'
+            });
+        }
+
+        function updateUnlockLabels(unlockDates) {
+            [2, 3, 4].forEach((part) => {
+                const label = document.getElementById(`unlock-label-${part}`);
+                if (label) {
+                    label.textContent = `Freischaltung am ${formatUnlockDate(unlockDates[part])}`;
+                }
+            });
+        }
 
         function setupIntersectionObserver() {
             const observer = new IntersectionObserver((entries) => {
@@ -534,6 +580,9 @@
 
         function init() {
             const now = new Date();
+            const unlockDates = getUnlockDates();
+
+            updateUnlockLabels(unlockDates);
             
             [2, 3, 4].forEach(part => {
                 const isUnlocked = now >= unlockDates[part] || progress[part] === true;
@@ -594,6 +643,19 @@
                 html += `</div></div>`;
                 container.innerHTML += html;
             });
+        }
+
+        function resetProgress() {
+            const shouldReset = window.confirm('Fortschritt wirklich löschen? Der 3-Tage-Zyklus startet dann ab heute neu.');
+            if (!shouldReset) {
+                return;
+            }
+
+            localStorage.removeItem('tankstelleProgress');
+            localStorage.removeItem(scheduleStorageKey);
+            progress = { 2: false, 3: false, 4: false };
+            init();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function checkQuiz(part) {
